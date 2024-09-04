@@ -11,6 +11,7 @@ export interface UserContextValue {
   error: string | null;
   isLoading: boolean;
   checkSession?: () => Promise<void>;
+  updateUser?: (user: User) => void;  // <-- Add updateUser to the interface
 }
 
 export const UserContext = React.createContext<UserContextValue | undefined>(undefined);
@@ -43,6 +44,10 @@ export function UserProvider({ children }: UserProviderProps): React.JSX.Element
     }
   }, []);
 
+  const updateUser = React.useCallback((user: User): void => {
+    setState((prev) => ({ ...prev, user, error: null }));
+  }, []);
+
   React.useEffect(() => {
     checkSession().catch((err: unknown) => {
       logger.error(err);
@@ -51,7 +56,11 @@ export function UserProvider({ children }: UserProviderProps): React.JSX.Element
     // eslint-disable-next-line react-hooks/exhaustive-deps -- Expected
   }, []);
 
-  return <UserContext.Provider value={{ ...state, checkSession }}>{children}</UserContext.Provider>;
+  return (
+    <UserContext.Provider value={{ ...state, checkSession, updateUser }}>
+      {children}
+    </UserContext.Provider>
+  );
 }
 
 export const UserConsumer = UserContext.Consumer;

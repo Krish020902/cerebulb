@@ -1,0 +1,305 @@
+/* .path-visualizer {
+    display: flex;
+    align-items: center;
+}
+
+.path-segment {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.card {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    width: 250px;
+    border: 1px solid #e0e0e0;
+}
+
+.card-content {
+    display: flex;
+}
+
+.color-box {
+    width: 50px;
+    height: 80px;
+    border-radius: 5px;
+    margin-right: 10px;
+    background-color: yellow;
+    background-image: radial-gradient(circle, orange 1px, transparent 1px);
+    background-size: 5px 5px;
+}
+
+.yellow .color-box {
+    background-color: yellow;
+}
+
+.green .color-box {
+    background-color: green;
+    background-image: radial-gradient(circle, darkgreen 1px, transparent 1px);
+}
+
+.text-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.text-line {
+    margin-bottom: 5px;
+}
+
+.label {
+    font-weight: bold;
+}
+
+.value {
+    margin-left: 5px;
+}
+
+.path-line {
+    width: 50px;
+    height: 2px;
+    background-color: blue;
+} */
+
+.plate-display {
+    font-family: Arial, sans-serif;
+    max-width: 10000px;
+    margin: 0 auto;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.plate-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.replace-button {
+    background-color: #0077be;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.timeline {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: #0077be;
+    z-index: 1;
+}
+
+.timeline-point {
+    width: 10px;
+    height: 10px;
+    background-color: #0077be;
+    border-radius: 50%;
+    z-index: 2;
+}
+
+.timeline-title {
+    font-size: 12px;
+    color: #0077be;
+    margin-bottom: 40px;
+    /* margin-top: px; */
+}
+
+.cards-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.plate-card {
+    flex: 1;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    
+
+}
+
+.color-bar {
+    height: 50px;
+    position: relative;
+}
+
+.dots {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle, white 2px, transparent 2px);
+    background-size: 10px 10px;
+    opacity: 0.3;
+}
+
+.green-card {
+    background-color: #4CAF50;
+}
+
+.yellow-card {
+    background-color: #FFC107;
+}
+.red-card {
+    background-color: rgb(174, 21, 21);
+}
+.blue-card {
+    background-color: rgb(52, 52, 185);
+}
+
+
+
+.plate-card {
+    height: 190px;
+    padding: 6px;
+    display: flex;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.plate {
+    border-radius: 8px;
+    width: 80px;
+    position: relative;
+}
+
+.dots {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.8) 2px, transparent 2px);
+    background-size: 10px 10px;
+}
+
+.green-card {
+    background-color: #4CAF50;
+}
+
+.yellow-card {
+    background-color: #FFC107;
+}
+
+.card-content {
+    flex: 1;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.card-content p {
+    margin: 3px 0;
+    font-size: 14px;
+}
+
+.grade-wash {
+    font-size: 16px;
+}
+
+.date-time {
+    color: "black";
+}
+
+.replace-text {
+    color: #0077be;
+    margin-top: 5px;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+        z-index: 1000;
+            /* Ensures the modal appears above everything else */
+}
+
+.modal {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    position: relative;
+        z-index: 1001;
+            /* Ensures modal content is on top */
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.modal h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.input-group input,
+.input-group select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.modal .replace-button {
+    background-color: #0077be;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}

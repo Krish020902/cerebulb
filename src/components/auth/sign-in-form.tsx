@@ -17,10 +17,12 @@ import { Eye as EyeIcon } from '@phosphor-icons/react/dist/ssr/Eye';
 import { EyeSlash as EyeSlashIcon } from '@phosphor-icons/react/dist/ssr/EyeSlash';
 import { Controller, useForm } from 'react-hook-form';
 import { z as zod } from 'zod';
+import axios from 'axios'
 
 import { paths } from '@/paths';
 import { authClient } from '@/lib/auth/client';
 import { useUser } from '@/hooks/use-user';
+// import { UserContext } from '@/contexts/user-context';
 
 const schema = zod.object({
   email: zod.string().min(1, { message: 'Email is required' }).email(),
@@ -29,12 +31,12 @@ const schema = zod.object({
 
 type Values = zod.infer<typeof schema>;
 
-const defaultValues = { email: 'sofia@devias.io', password: 'Secret1' } satisfies Values;
+const defaultValues = { email: '', password: '' } satisfies Values;
 
 export function SignInForm(): React.JSX.Element {
   const router = useRouter();
 
-  const { checkSession } = useUser();
+  const { user, isLoading, error, updateUser, checkSession } = useUser();
 
   const [showPassword, setShowPassword] = React.useState<boolean>();
 
@@ -50,35 +52,63 @@ export function SignInForm(): React.JSX.Element {
   const onSubmit = React.useCallback(
     async (values: Values): Promise<void> => {
       setIsPending(true);
+      try {
+        console.log("Submitting form values:", values);
+        const response = await axios.post('http://localhost:5000/user_login', values);
 
-      const { error } = await authClient.signInWithPassword(values);
+        console.log("Received response:", response.data);
 
-      if (error) {
-        setError('root', { type: 'server', message: error });
+        if (response.data.status === 'success') {
+          await checkSession?.();
+
+          // Fetch additional user details
+          const userDetailsResponse = await axios.get(`http://localhost:5000/user_detail?email=${values.email}`);
+          // console.log("Fetched user details:", userDetailsResponse);
+          if (userDetailsResponse.status === 200) {
+            updateUser?.(userDetailsResponse.data.data);
+          }
+
+
+
+          // Assuming updateUserContext is a function to update the context with user details
+          // if (userDetailsResponse.data.status === 'success') {
+          //   // updateUserContext(userDetailsResponse.data.data); // Update the context with user details
+          // }
+
+          console.log("Check session completed. Redirecting to dashboard.");
+          router.push('/dashboard');
+        } else {
+          console.log("Login failed:", response.data.message);
+          setError('root', { type: 'server', message: response.data.message || 'Unknown error' });
+        }
+      } catch (error: unknown) {
+        let errorMessage = 'An error occurred';
+        if (axios.isAxiosError(error) && error.response) {
+          errorMessage = error.response.data.message || 'Unknown error';
+        } else if (error instanceof Error) {
+          errorMessage = error.message;
+        }
+        console.error("Error during login:", errorMessage);
+        setError('root', { type: 'server', message: errorMessage });
+      } finally {
         setIsPending(false);
-        return;
       }
-
-      // Refresh the auth state
-      await checkSession?.();
-
-      // UserProvider, for this case, will not refresh the router
-      // After refresh, GuestGuard will handle the redirect
-      router.refresh();
     },
-    [checkSession, router, setError]
+    [checkSession, router, setError, updateUser]
   );
+
+
 
   return (
     <Stack spacing={4}>
       <Stack spacing={1}>
         <Typography variant="h4">Sign in</Typography>
-        <Typography color="text.secondary" variant="body2">
+        {/* <Typography color="text.secondary" variant="body2">
           Don&apos;t have an account?{' '}
           <Link component={RouterLink} href={paths.auth.signUp} underline="hover" variant="subtitle2">
             Sign up
           </Link>
-        </Typography>
+        </Typography> */}
       </Stack>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={2}>
@@ -138,16 +168,7 @@ export function SignInForm(): React.JSX.Element {
           </Button>
         </Stack>
       </form>
-      <Alert color="warning">
-        Use{' '}
-        <Typography component="span" sx={{ fontWeight: 700 }} variant="inherit">
-          sofia@devias.io
-        </Typography>{' '}
-        with password{' '}
-        <Typography component="span" sx={{ fontWeight: 700 }} variant="inherit">
-          Secret1
-        </Typography>
-      </Alert>
+
     </Stack>
   );
 }

@@ -16,17 +16,18 @@ import { ArrowRight as ArrowRightIcon } from '@phosphor-icons/react/dist/ssr/Arr
 import dayjs from 'dayjs';
 
 const statusMap = {
-  pending: { label: 'Pending', color: 'warning' },
-  delivered: { label: 'Delivered', color: 'success' },
-  refunded: { label: 'Refunded', color: 'error' },
+  A: { label: 'Grade-A', color: 'success' },  // Green
+  B: { label: 'Grade-B', color: 'primary' },  // Blue
+  C: { label: 'Grade-C', color: 'warning' },  // Yellow
+  D: { label: 'Grade-D', color: 'error' },    // Red
 } as const;
 
 export interface Order {
-  id: string;
-  customer: { name: string };
-  amount: number;
-  status: 'pending' | 'delivered' | 'refunded';
-  createdAt: Date;
+  plate_number: number;
+  cell_number: string;
+  name: string;
+  date: Date;
+  grade: 'A' | 'B' | 'C' | 'D';
 }
 
 export interface LatestOrdersProps {
@@ -37,30 +38,34 @@ export interface LatestOrdersProps {
 export function LatestOrders({ orders = [], sx }: LatestOrdersProps): React.JSX.Element {
   return (
     <Card sx={sx}>
-      <CardHeader title="Latest orders" />
+      <CardHeader title="Latest Plates Graded" />
       <Divider />
       <Box sx={{ overflowX: 'auto' }}>
         <Table sx={{ minWidth: 800 }}>
           <TableHead>
             <TableRow>
-              <TableCell>Order</TableCell>
-              <TableCell>Customer</TableCell>
+              <TableCell>Plate no.</TableCell>
+              <TableCell>Cell no.</TableCell>
               <TableCell sortDirection="desc">Date</TableCell>
-              <TableCell>Status</TableCell>
+              <TableCell>Grade</TableCell>
+              <TableCell>Operator name</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {orders.map((order) => {
-              const { label, color } = statusMap[order.status] ?? { label: 'Unknown', color: 'default' };
+              console.log("yup", order)
+              console.log("mapper", statusMap[order.grade])
+              const { label, color } = statusMap[order.grade] ?? { label: 'Unknown', color: 'default' };
 
               return (
-                <TableRow hover key={order.id}>
-                  <TableCell>{order.id}</TableCell>
-                  <TableCell>{order.customer.name}</TableCell>
-                  <TableCell>{dayjs(order.createdAt).format('MMM D, YYYY')}</TableCell>
+                <TableRow hover key={order.plate_number}>
+                  <TableCell>{order.plate_number}</TableCell>
+                  <TableCell>{order.cell_number}</TableCell>
+                  <TableCell>{dayjs(order.date).format('MMM D, YYYY')}</TableCell>
                   <TableCell>
                     <Chip color={color} label={label} size="small" />
                   </TableCell>
+                  <TableCell>{order.name}</TableCell>
                 </TableRow>
               );
             })}
