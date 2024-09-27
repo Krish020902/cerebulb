@@ -1,6 +1,6 @@
 "use client";
 
-import React, { DragEvent, ChangeEvent } from 'react';
+import React, { DragEvent, ChangeEvent, useEffect } from 'react';
 import { Box, Button, Card, CardHeader, Grid, Paper, TextField, Typography } from '@mui/material';
 import styled from '@emotion/styled';
 import axios from 'axios';
@@ -16,34 +16,67 @@ const DragDropArea = styled(Paper)(({ theme }) => ({
 
 const ImageComponent: React.FC = () => {
 
-    const [image, setImage] = React.useState<string | null>(null);
+    const [image, setImage] = React.useState<File | null>(null);
+    const [preview, setPreview] = React.useState<string>('');
     const [zoneName, setZoneName] = React.useState('East zone');
     const [cellNumber, setCellNumber] = React.useState('');
     const [plateNumber, setPlateNumber] = React.useState('');
     const [plateGroup, setPlateGroup] = React.useState('');
     const [classifiedGrade, setClassifiedGrade] = React.useState('');
 
+    useEffect(() => {
+        if (!image) {
+
+            return;
+        }
+
+        const objectUrl = URL.createObjectURL(image)
+        setPreview(objectUrl)
+
+
+        return () => URL.revokeObjectURL(objectUrl)
+    }, [image])
+
+
     const handleDrop = (e: DragEvent<HTMLDivElement>) => {
         e.preventDefault();
         const file = e.dataTransfer.files[0];
-        handleImageUpload(file);
+
+        setImage(file);
     };
 
     const handleImageUpload = (file: File) => {
-        const reader = new FileReader();
-        reader.onload = (e: ProgressEvent<FileReader>) => {
-            if (e.target && e.target.result) {
-                setImage(e.target.result as string);
-            }
-        };
-        reader.readAsDataURL(file);
+
+        setImage(file);
+
     };
 
     const handleAnalyse = () => {
-        const grades = ['A', 'B', 'C', 'D'];
-        const randomGrade = grades[Math.floor(Math.random() * grades.length)];
-        setClassifiedGrade(randomGrade);
+        if (!image) {
+            console.error('No image to analyze');
+            return;
+        }
+
+
+
+        const formData = new FormData();
+        formData.append('image', image, 'uploaded_image.png');
+
+
+        axios.post('http://localhost:5000/analyze_image', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        })
+            .then((response) => {
+                console.log('Analysis result:', response.data);
+                setClassifiedGrade(response.data.classifiedGrade); // Assuming the backend returns the grade
+            })
+            .catch((error) => {
+                console.error('Error analyzing image:', error);
+            });
     };
+
 
     const handlePlateNumberChange = (e: ChangeEvent<HTMLInputElement>) => {
         const input = e.target.value;
@@ -51,7 +84,7 @@ const ImageComponent: React.FC = () => {
 
         const num = parseInt(input, 10);
         if (!isNaN(num) && num > 0) {
-            // Use modulo operation to determine the plate group
+
             const groupNumber = (num % 3 === 1) ? 'A1' : (num % 3 === 2) ? 'A2' : 'A3';
             setPlateGroup(groupNumber);
         } else {
@@ -87,7 +120,7 @@ const ImageComponent: React.FC = () => {
                 <Box sx={{ width: '60%', pr: 2 }}>
                     <DragDropArea onDrop={handleDrop} onDragOver={(e) => e.preventDefault()}>
                         {image ? (
-                            <img src={image} alt="Uploaded" style={{ maxWidth: '100%', maxHeight: '100%' }} />
+                            <img src={preview} alt="Uploaded" style={{ maxWidth: '100%', maxHeight: '100%' }} />
                         ) : (
                             <Typography>Drag and drop an image here</Typography>
                         )}

@@ -1,5 +1,3 @@
-'use client';
-
 import * as React from "react";
 import { useState, useEffect } from "react";
 import "../../../../timeline.css";
@@ -19,11 +17,30 @@ interface PlateCardProps {
 }
 
 interface TimelineProps {
-    key: number;
-    plateNumber: string;
-    cards1: PlateCardProps[];
     cell: string;
 }
+
+// HoverModal component to display image on hover
+const HoverModal: React.FC<{ grade: string; x: number; y: number }> = ({ grade, x, y }) => {
+    const getImageByGrade = (grade: string) => {
+        switch (grade) {
+            case "A":
+                return "../../../../public/assets/grade-a.png";
+            case "B":
+                return "image_for_grade_b.png";
+            case "C":
+                return "image_for_grade_c.png";
+            default:
+                return "default_image.png";
+        }
+    };
+
+    return (
+        <div className="hover-modal" style={{ top: y, left: x }}>
+            <img src={getImageByGrade(grade)} alt={`Grade ${grade} Preview`} />
+        </div>
+    );
+};
 
 // ReplaceModal component
 const ReplaceModal: React.FC<ReplaceModalProps> = ({ isOpen, onClose, onReplace }) => {
@@ -77,8 +94,20 @@ const ReplaceModal: React.FC<ReplaceModalProps> = ({ isOpen, onClose, onReplace 
     );
 };
 
-// PlateCard component
+// PlateCard component with hover functionality
 const PlateCard: React.FC<PlateCardProps> = ({ grade, wash, dateTime, replace }) => {
+    const [isHovered, setIsHovered] = useState<boolean>(false);
+    const [hoverPosition, setHoverPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+
+    const handleMouseEnter = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        setIsHovered(true);
+        setHoverPosition({ x: event.clientX, y: event.clientY });
+    };
+
+    const handleMouseLeave = () => {
+        setIsHovered(false);
+    };
+
     let cardColor = "green-card";
     if (grade === "B") {
         cardColor = "yellow-card";
@@ -89,7 +118,11 @@ const PlateCard: React.FC<PlateCardProps> = ({ grade, wash, dateTime, replace })
     }
 
     return (
-        <div className="plate-card">
+        <div
+            className="plate-card"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+        >
             <div className={`plate ${cardColor}`}>
                 <div className="dots"></div>
             </div>
@@ -102,30 +135,35 @@ const PlateCard: React.FC<PlateCardProps> = ({ grade, wash, dateTime, replace })
                 </p>
                 {replace && <p className="replace-text">{replace}</p>}
             </div>
+            {isHovered && (
+                <HoverModal grade={grade} x={hoverPosition.x} y={hoverPosition.y - 50} />
+            )}
         </div>
     );
 };
 
 // Timeline component
-const Timeline: React.FC<TimelineProps> = ({ plateNumber, cell }) => {
-    const [cards, setCards] = useState<PlateCardProps[]>([]);
+const Timeline: React.FC<TimelineProps> = ({ cell }) => {
+    const [allCards, setAllCards] = useState<PlateCardProps[][]>([]);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await axios.post('http://localhost:5000/anode_records', { cellNumber: cell });
-                // Assuming response data is an array of arrays as described in the previous conversation
                 const fetchedData = response.data;
+                console.log("fetched data", fetchedData);
 
-                const flattenedCards = fetchedData.flat().map((item: any) => ({
+                // Store the response data as is (array of arrays)
+                const formattedData = fetchedData.map((array: any[]) => array.map((item: any) => ({
                     grade: item.grade,
                     wash: item.wash,
                     dateTime: item.dateTime,
                     replace: item.replace || undefined,
-                }));
+                })));
+                console.log("formatted card data", formattedData);
 
-                setCards(flattenedCards);
+                setAllCards(formattedData);
             } catch (error) {
                 console.error("Error fetching data", error);
             }
@@ -143,34 +181,36 @@ const Timeline: React.FC<TimelineProps> = ({ plateNumber, cell }) => {
 
     return (
         <>
-            <div className="plate-display">
-                <div className="plate-header">
-                    <h2>Plate no. {plateNumber}</h2>
-                    <button className="replace-button" onClick={() => setIsModalOpen(true)}>
-                        Replace
-                    </button>
+            {allCards.map((cards, timelineIndex) => (
+                <div key={timelineIndex} className="plate-display">
+                    <div className="plate-header">
+                        <h2>Plate no. {timelineIndex + 1}</h2>
+                        <button className="replace-button" onClick={() => setIsModalOpen(true)}>
+                            Replace
+                        </button>
+                    </div>
+                    <div className="timeline">
+                        {cards.map((_, index) => (
+                            <React.Fragment key={index}>
+                                <div className="timeline-point"></div>
+                                <p className="timeline-title">
+                                    Title {(index + 1).toString().padStart(2, "0")}
+                                </p>
+                            </React.Fragment>
+                        ))}
+                    </div>
+                    <div className="cards-container">
+                        {cards.map((card, index) => (
+                            <PlateCard key={index} {...card} />
+                        ))}
+                    </div>
                 </div>
-                <div className="timeline">
-                    {cards.map((_, index) => (
-                        <React.Fragment key={index}>
-                            <div className="timeline-point"></div>
-                            <p className="timeline-title">
-                                Title {(index + 1).toString().padStart(2, "0")}
-                            </p>
-                        </React.Fragment>
-                    ))}
-                </div>
-                <div className="cards-container">
-                    {cards.map((card, index) => (
-                        <PlateCard key={index} {...card} />
-                    ))}
-                </div>
-                <ReplaceModal
-                    isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
-                    onReplace={handleReplace}
-                />
-            </div>
+            ))}
+            <ReplaceModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onReplace={handleReplace}
+            />
         </>
     );
 };

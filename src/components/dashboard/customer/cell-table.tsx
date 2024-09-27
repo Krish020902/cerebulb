@@ -158,14 +158,8 @@ const CellTable: React.FC = () => {
                         Back to Table
                     </Button>
                     <h1 >Cell no. {selectedPlate}</h1>
+                    <Timeline cell={selectedPlate} />
 
-                    {cardData.map((cards, index) => {
-                        console.log("check cards", cards)
-                        return (
-
-                            <Timeline key={index} plateNumber={`0${index + 1}`} cards1={cards} cell={selectedPlate} />
-                        )
-                    })}
                 </div>
             ) : (
                 <table className="plate-table">
