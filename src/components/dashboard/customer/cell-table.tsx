@@ -16,71 +16,71 @@ interface Plate {
 
 // Main Component definition
 const CellTable: React.FC = () => {
-    const cardData = [[
-        {
-            grade: "C",
-            wash: "Wash",
-            dateTime: "2024-02-11 17:00:52",
-            replace: "Replaced with Grade A",
-        },
-        { grade: "A", wash: "Wash", dateTime: "2024-02-11 17:16:48" },
-        { grade: "B", wash: "Wash", dateTime: "2024-03-11 19:04:12" },
-        {
-            grade: "C",
-            wash: "Wash",
-            dateTime: "2024-02-11 17:00:52",
-            replace: "Replaced with Grade A",
-        },
-        { grade: "A", wash: "Wash", dateTime: "2024-02-11 17:16:48" },
-    ], [
-        {
-            grade: "D",
-            wash: "Wash",
-            dateTime: "2024-02-11 17:00:52",
-            replace: "Replaced with Grade A",
-        },
-        { grade: "A", wash: "Wash", dateTime: "2024-02-11 17:16:48" },
-        { grade: "B", wash: "Wash", dateTime: "2024-03-11 19:04:12" },
-        {
-            grade: "D",
-            wash: "Wash",
-            dateTime: "2024-02-11 17:00:52",
-            replace: "Replaced with Grade A",
-        },
-        { grade: "A", wash: "Wash", dateTime: "2024-02-11 17:16:48" },
-    ], [
-        {
-            grade: "B",
-            wash: "Wash",
-            dateTime: "2024-02-11 17:00:52",
-            replace: "Replaced with Grade A",
-        },
-        { grade: "C", wash: "Wash", dateTime: "2024-02-11 17:16:48" },
-        { grade: "A", wash: "Wash", dateTime: "2024-03-11 19:04:12" },
-        {
-            grade: "D",
-            wash: "Wash",
-            dateTime: "2024-02-11 17:00:52",
-            replace: "Replaced with Grade A",
-        },
-        { grade: "A", wash: "Wash", dateTime: "2024-02-11 17:16:48" },
-    ], [
-        {
-            grade: "A",
-            wash: "Wash",
-            dateTime: "2024-02-11 17:00:52",
-            replace: "Replaced with Grade A",
-        },
-        { grade: "A", wash: "Wash", dateTime: "2024-02-11 17:16:48" },
-        { grade: "B", wash: "Wash", dateTime: "2024-03-11 19:04:12" },
-        {
-            grade: "C",
-            wash: "Wash",
-            dateTime: "2024-02-11 17:00:52",
-            replace: "Replaced with Grade A",
-        },
-        { grade: "B", wash: "Wash", dateTime: "2024-02-11 17:16:48" },
-    ]];
+    // const cardData = [[
+    //     {
+    //         grade: "C",
+    //         wash: "Wash",
+    //         dateTime: "2024-02-11 17:00:52",
+    //         replace: "Replaced with Grade A",
+    //     },
+    //     { grade: "A", wash: "Wash", dateTime: "2024-02-11 17:16:48" },
+    //     { grade: "B", wash: "Wash", dateTime: "2024-03-11 19:04:12" },
+    //     {
+    //         grade: "C",
+    //         wash: "Wash",
+    //         dateTime: "2024-02-11 17:00:52",
+    //         replace: "Replaced with Grade A",
+    //     },
+    //     { grade: "A", wash: "Wash", dateTime: "2024-02-11 17:16:48" },
+    // ], [
+    //     {
+    //         grade: "D",
+    //         wash: "Wash",
+    //         dateTime: "2024-02-11 17:00:52",
+    //         replace: "Replaced with Grade A",
+    //     },
+    //     { grade: "A", wash: "Wash", dateTime: "2024-02-11 17:16:48" },
+    //     { grade: "B", wash: "Wash", dateTime: "2024-03-11 19:04:12" },
+    //     {
+    //         grade: "D",
+    //         wash: "Wash",
+    //         dateTime: "2024-02-11 17:00:52",
+    //         replace: "Replaced with Grade A",
+    //     },
+    //     { grade: "A", wash: "Wash", dateTime: "2024-02-11 17:16:48" },
+    // ], [
+    //     {
+    //         grade: "B",
+    //         wash: "Wash",
+    //         dateTime: "2024-02-11 17:00:52",
+    //         replace: "Replaced with Grade A",
+    //     },
+    //     { grade: "C", wash: "Wash", dateTime: "2024-02-11 17:16:48" },
+    //     { grade: "A", wash: "Wash", dateTime: "2024-03-11 19:04:12" },
+    //     {
+    //         grade: "D",
+    //         wash: "Wash",
+    //         dateTime: "2024-02-11 17:00:52",
+    //         replace: "Replaced with Grade A",
+    //     },
+    //     { grade: "A", wash: "Wash", dateTime: "2024-02-11 17:16:48" },
+    // ], [
+    //     {
+    //         grade: "A",
+    //         wash: "Wash",
+    //         dateTime: "2024-02-11 17:00:52",
+    //         replace: "Replaced with Grade A",
+    //     },
+    //     { grade: "A", wash: "Wash", dateTime: "2024-02-11 17:16:48" },
+    //     { grade: "B", wash: "Wash", dateTime: "2024-03-11 19:04:12" },
+    //     {
+    //         grade: "C",
+    //         wash: "Wash",
+    //         dateTime: "2024-02-11 17:00:52",
+    //         replace: "Replaced with Grade A",
+    //     },
+    //     { grade: "B", wash: "Wash", dateTime: "2024-02-11 17:16:48" },
+    // ]];
 
     // Sample data for 5 plates with typing
     const plates: Plate[] = [
@@ -138,6 +138,7 @@ const CellTable: React.FC = () => {
             case "B":
                 return "yellow";
             case "C":
+                return "red";
             case "D":
                 return "red";
             default:
@@ -166,24 +167,22 @@ const CellTable: React.FC = () => {
                     <thead>
                         <tr>
                             <th className="plate-column">Plate Group</th>
-                            <th colSpan={4}>A1</th>
-                            <th colSpan={4}>A2</th>
-                            <th colSpan={4}>A3</th>
+                            <th colSpan={3}>A1</th>
+                            <th colSpan={3}>A2</th>
+                            <th colSpan={3}>A3</th>
                         </tr>
                         <tr>
                             <th className="plate-column">Plate Grade</th>
                             <th>A</th>
                             <th>B</th>
                             <th>C</th>
-                            <th>D</th>
                             <th>A</th>
                             <th>B</th>
                             <th>C</th>
-                            <th>D</th>
                             <th>A</th>
                             <th>B</th>
                             <th>C</th>
-                            <th>D</th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -206,7 +205,7 @@ const CellTable: React.FC = () => {
                                     </div>
                                 </td>
                                 {["A1", "A2", "A3"].flatMap((section) =>
-                                    ["A", "B", "C", "D"].map((grade) => (
+                                    ["A", "B", "C"].map((grade) => (
                                         <td key={`${section}${grade}`}>
                                             {Math.floor(Math.random() * 20) + 1}
                                         </td>

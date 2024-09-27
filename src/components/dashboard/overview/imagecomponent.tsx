@@ -4,6 +4,9 @@ import React, { DragEvent, ChangeEvent, useEffect } from 'react';
 import { Box, Button, Card, CardHeader, Grid, Paper, TextField, Typography } from '@mui/material';
 import styled from '@emotion/styled';
 import axios from 'axios';
+// import CustomSnackBar, { snackbarType } from '';
+import CustomSnackBar, { snackbarType } from '@/components/Customsnackbar';
+
 
 const DragDropArea = styled(Paper)(({ theme }) => ({
     height: '300px',
@@ -23,6 +26,8 @@ const ImageComponent: React.FC = () => {
     const [plateNumber, setPlateNumber] = React.useState('');
     const [plateGroup, setPlateGroup] = React.useState('');
     const [classifiedGrade, setClassifiedGrade] = React.useState('');
+    const [onSuccess, setOnSuccess] = React.useState<snackbarType>({ success: false, message: '' });
+
 
     useEffect(() => {
         if (!image) {
@@ -102,14 +107,32 @@ const ImageComponent: React.FC = () => {
             plateGroup,
             classifiedGrade,
         };
+        const data1 = {
+            "cell_number": parseInt(cellNumber, 10),  // Ensure it's an integer
+            "anode_number": parseInt(plateNumber, 10),  // Ensure it's an integer
+            "grade": classifiedGrade,  // Assuming grade is a string or already the correct type
 
-        axios.post('http://localhost:5000/cell_data', data)
+        };
+
+
+        axios.post('http://localhost:5000/add_anode_record', data1)
             .then((response) => {
                 console.log('Submitted successfully:', response.data);
+                // if (response.status == 200) {
+                setOnSuccess({ message: "Plate added!", success: true, variant: "success" });
+                // }
             })
             .catch((error) => {
                 console.error('Error submitting data:', error);
+                setOnSuccess({ message: error.message, success: true, variant: "error" });
             });
+        // axios.post('http://localhost:5000/cell_data', data)
+        //     .then((response) => {
+        //         console.log('Submitted successfully:', response.data);
+        //     })
+        //     .catch((error) => {
+        //         console.error('Error submitting data:', error);
+        //     });
     };
 
     return (
@@ -117,6 +140,8 @@ const ImageComponent: React.FC = () => {
             <CardHeader title="Grade Image" />
 
             <Box sx={{ display: 'flex', p: 2, paddingTop: '40px', paddingBottom: '15px' }}>
+                <CustomSnackBar onSuccess={onSuccess} setOnSuccess={setOnSuccess} />
+
                 <Box sx={{ width: '60%', pr: 2 }}>
                     <DragDropArea onDrop={handleDrop} onDragOver={(e) => e.preventDefault()}>
                         {image ? (
