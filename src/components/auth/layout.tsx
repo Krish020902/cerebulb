@@ -24,7 +24,7 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
       <Box sx={{ display: 'flex', flex: '1 1 auto', flexDirection: 'column' }}>
         <Box sx={{ p: 3 }}>
           <Box component={RouterLink} href={paths.home} sx={{ display: 'inline-block', fontSize: 0 }}>
-            <DynamicLogo colorDark="light" colorLight="dark" height={38} width={180} />
+            <DynamicLogo colorDark="light" colorLight="dark" height={48} width={180} />
           </Box>
         </Box>
         <Box sx={{ alignItems: 'center', display: 'flex', flex: '1 1 auto', justifyContent: 'center', p: 3 }}>
@@ -39,6 +39,15 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
           display: { xs: 'none', lg: 'flex' },
           justifyContent: 'center',
           p: 3,
+          // alignItems: 'center',
+          // backgroundImage: 'url(./assets/bglogo.jpg)', // Replace with your actual image URL
+          // backgroundSize: 'cover', // or 'contain' depending on how you want the image to fit
+          // backgroundPosition: 'center',
+          // backgroundRepeat: 'no-repeat',
+          // color: 'var(--mui-palette-common-white)',
+          // display: { xs: 'none', lg: 'flex' },
+          // justifyContent: 'center',
+          // p: 3,
         }}
       >
         <Stack spacing={3}>
@@ -46,11 +55,11 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
             <Typography color="inherit" sx={{ fontSize: '24px', lineHeight: '32px', textAlign: 'center' }} variant="h1">
               Welcome to{' '}
               <Box component="span" sx={{ color: '#15b79e' }}>
-                CereBulb
+                Vedanta
               </Box>
             </Typography>
             <Typography align="center" variant="subtitle1">
-              Catalyst Your Digital Transformation            </Typography>
+              Hindustan Zinc Limited</Typography>
           </Stack>
 
         </Stack>

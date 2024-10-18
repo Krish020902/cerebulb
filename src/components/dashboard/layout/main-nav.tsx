@@ -48,7 +48,9 @@ export function MainNav(): React.JSX.Element {
             >
               <ListIcon />
             </IconButton>
-
+            <h1 style={{ fontFamily: '-moz-initial' }}>
+              Vedanta HZL
+            </h1>
             {/* <Tooltip title="Search">
               <IconButton>
                 <MagnifyingGlassIcon />

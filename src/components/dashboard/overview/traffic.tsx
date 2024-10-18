@@ -60,7 +60,7 @@ function useChartOptions(labels: string[]): ApexOptions {
 
   return {
     chart: { background: 'transparent' },
-    colors: [theme.palette.error.main, theme.palette.warning.main, theme.palette.primary.main, theme.palette.success.main],
+    colors: [theme.palette.error.main, theme.palette.warning.main, theme.palette.success.main, theme.palette.success.main],
     dataLabels: { enabled: false },
     labels,
     legend: { show: false },

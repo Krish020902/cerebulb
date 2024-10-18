@@ -59,7 +59,7 @@ export default function Page(): React.JSX.Element {
         <ImageComponent />
       </Grid>
       <Grid lg={4} md={6} xs={12}>
-        <Traffic chartSeries={[5, 10, 25, 60]} labels={['GradeD', 'GradeC', 'GradeB', 'GradeA']} sx={{ height: '100%' }} />
+        <Traffic chartSeries={[15, 25, 60]} labels={['GradeC', 'GradeB', 'GradeA']} sx={{ height: '100%' }} />
       </Grid>
 
       <Grid lg={12} md={12} xs={12}>
